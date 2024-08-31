@@ -3,28 +3,34 @@ package com.csc;
 import java.util.Scanner;
 
 public class Menu {
-    public int validation(String prompt, String errorMessage, Integer lowerBound, Integer upperBound, Scanner in) { //take in prompt, error message, lower and upper bounds, and scanner object as arguments
+    public Integer validation(String prompt, String errorMessage, Integer lowerBound, Integer upperBound, Scanner in) { //take in prompt, error message, lower and upper bounds, and scanner object as arguments
         int inputInt; //store user input
-        
-        while (true) {  //infinite loop will execute until valid user input is entered
-            System.out.print(prompt);   //output prompt
 
-            if (in.hasNextInt()) {      //check if user input is an integer
-                inputInt = in.nextInt();   //set inputInt to user input
+        if ((lowerBound == null || upperBound == null) || lowerBound <= upperBound) {
+            while (true) {  //infinite loop will execute until valid user input is entered
+                System.out.print(prompt);   //output prompt
 
-                if ((lowerBound == null || lowerBound <= inputInt) && (upperBound == null || inputInt <= upperBound)) { //check if inputInt is within bounds
-                    System.out.print("Input is valid ");
-                    break;  //break out of loop
+                if (in.hasNextInt()) {      //check if user input is an integer
+                    inputInt = in.nextInt();   //set inputInt to user input
+
+                    if ((lowerBound == null || lowerBound <= inputInt) && (upperBound == null || inputInt <= upperBound)) { //check if inputInt is within bounds
+                        System.out.print("Input is valid ");
+                        break;  //break out of loop
+                    }
+                    else {   //print error message if out of bounds
+                        System.out.println(errorMessage);
+                    }
                 }
-                else {   //print error message if out of bounds
-                    System.out.println(errorMessage);
+                else {  //if scanner does not detect an Integer, notify user of invalid input type
+                    System.out.println(errorMessage); 
+                    in.next();   //consume input to avoid infinite loop
                 }
             }
-            else {  //if scanner does not detect an Integer, notify user of invalid input type
-                System.out.println(errorMessage); 
-                in.next();   //consume input to avoid infinite loop
-            }
+        }else {
+            System.out.println("Invalid bounds passed");
+            return null;
         }
+
         return inputInt;  //return value of input if it is valid
     }
 
@@ -36,6 +42,7 @@ public class Menu {
         System.out.println(menu.validation("Enter an integer from 0 to 5: ", "The input you entered is invalid. Try again.", 0, 5, scanner));  //test 1: check valid integer from 0 to 5
         System.out.println(menu.validation("Enter an integer from -10 to 10: ", "The input you entered is invalid. Try again.", -10, 10, scanner));   //test 2: check valid integer from -10 to 10
         System.out.println(menu.validation("Enter an integer: ", "Invalid input type", null, null, scanner));    //test 3: check valid integer without bounds
+        System.out.println(menu.validation("Enter an integer between -5 and -8", "The integer you entered is invalid.", -5, -8, scanner)); //test 4: test when invalid bounds are passed
         
         scanner.close();
     }
